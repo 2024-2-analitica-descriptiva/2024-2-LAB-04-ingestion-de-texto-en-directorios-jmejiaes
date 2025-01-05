@@ -71,3 +71,53 @@ def pregunta_01():
 
 
     """
+
+    import zipfile
+    import os
+    import pandas as pd
+
+    # Descomprimir archivo
+    with zipfile.ZipFile("files/input.zip", "r") as zip_ref:
+        zip_ref.extractall("input")
+
+    # Leer archivos dentro de test
+    test_data = []
+    for root, _, files in os.walk("input/input/test"):
+        for file in files:
+            if file.endswith(".txt"):
+                with open(os.path.join(root, file), "r") as f:
+                    test_data.append({
+                        "phrase": f.read(),
+                        "target": root.split("/")[-1]
+                    })
+
+    # # Crear dataframe
+    test_df = pd.DataFrame(test_data)
+
+    # # crear el directorio de salida
+    os.makedirs("files/output", exist_ok=True)
+
+
+    # # Guardar archivos
+    test_df.to_csv("files/output/test_dataset.csv", index=False)
+
+    # Leer archivos dentro de train
+    train_data = []
+
+    for root, _, files in os.walk("input/input/train"):
+        for file in files:
+            if file.endswith(".txt"):
+                with open(os.path.join(root, file), "r") as f:
+                    train_data.append({
+                        "phrase": f.read(),
+                        "target": root.split("/")[-1]
+                    })
+
+    # # Crear dataframe
+    train_df = pd.DataFrame(train_data)
+
+    # # Guardar archivos
+    train_df.to_csv("files/output/train_dataset.csv", index=False)
+
+
+
